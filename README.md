@@ -206,10 +206,10 @@ information it needs to load our PE kernel correctly.
 - All PE headers never add up to a total size that exceeds 4K. So when file alignment is 4K (== memory alignment), the .text section is guaranteed to start at offset 4K (4096) in the PE file. This is a good place to put the multiboot header (which anyways needs to be present in its entirety within the first 8192 bytes.)
 - The multiboot header forms the first 48 bytes of the .text section.
 - declspec(naked) is an attribute that makes the compiler generate code without a prolog or an epilog. This is important because we want the multiboot header to start at offset 4096. Without the naked attribute, the function (and hence the .text section) would start with the bytes 55 8B EC which stand for the following instructions:
-{% highlight nasm linenos %}
+```asm
 push ebp      ;; 55
 mov  ebp, esp ;; 8B EC
-{% endhighlight %}
+```
 which is the prolog. Because of this the multiboot header would be pushed to offset 4099 and Grub would refuse to load the kernel because the multiboot header isn't 4K longword aligned. [Updated: 10/6/2005, 12:23 PM].
 
 Compiler switches:
